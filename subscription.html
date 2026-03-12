@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription - Upi Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .plan-card.featured {
+            border-color: var(--primary);
+        }
+
+        .plan-card.featured::before {
+            content: 'Popular';
+            position: absolute;
+            top: 20px;
+            right: -30px;
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 2.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transform: rotate(45deg);
+        }
+
+        .plan-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .plan-type.free { background: #e0f2fe; color: #0284c7; }
+        .plan-type.basic { background: #fef3c7; color: #d97706; }
+        .plan-type.pro { background: #dbeafe; color: #2563eb; }
+        .plan-type.enterprise { background: #fee2e2; color: #dc2626; }
+
+        .plan-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-price .currency {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .plan-price .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .plan-price .period {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .plan-features li i {
+            color: #10b981;
+            width: 18px;
+            height: 18px;
+        }
+
+        .current-plan-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: #d1fae5;
+            color: #059669;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .upgrade-btn {
+            width: 100%;
+            padding: 1rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .upgrade-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .upgrade-btn.primary:hover {
+            background: #1e4bd8;
+        }
+
+        .upgrade-btn.outline {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-main);
+        }
+
+        .upgrade-btn.outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body class="dashboard-page">
+
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item active"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Subscription Plans</h1>
+        </div>
+
+        <div class="current-plan-badge">
+            <i data-lucide="check-circle"></i>
+            Your Current Plan: <strong id="currentPlanName">Pro Merchant</strong>
+        </div>
+
+        <div class="plans-grid" id="plansGrid">
+            <!-- Plans will be loaded dynamically -->
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        // Load plans from localStorage
+        const DB_KEYS = {
+            PLANS: 'upiclick_plans',
+            MERCHANTS: 'upiclick_merchants'
+        };
+
+        function getData(key) {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : [];
+        }
+
+        // Mock current user's plan (in real app, get from session)
+        const currentPlanId = 'plan_3'; // Pro plan
+
+        function loadPlans() {
+            const plans = getData(DB_KEYS.PLANS) || [
+                { id: 'plan_1', name: 'Free', type: 'free', price: 0, duration: 30, maxMerchants: 1, features: ['Up to 100 transactions/month', 'Basic support', 'Email notifications'], status: 'active' },
+                { id: 'plan_2', name: 'Basic', type: 'basic', price: 499, duration: 30, maxMerchants: 5, features: ['Up to 1000 transactions/month', 'Priority support', 'SMS notifications', 'Basic analytics'], status: 'active' },
+                { id: 'plan_3', name: 'Pro Merchant', type: 'pro', price: 1499, duration: 30, maxMerchants: 25, features: ['Unlimited transactions', 'Dedicated support', 'SMS & WhatsApp notifications', 'Advanced analytics', 'Custom payment links'], status: 'active' },
+                { id: 'plan_4', name: 'Enterprise', type: 'enterprise', price: 4999, duration: 30, maxMerchants: -1, features: ['Unlimited everything', '24/7 Dedicated support', 'Custom integrations', 'White-label solution', 'Dedicated account manager'], status: 'active' }
+            ];
+
+            const currentPlan = plans.find(p => p.id === currentPlanId) || plans[2];
+            document.getElementById('currentPlanName').textContent = currentPlan.name;
+
+            const grid = document.getElementById('plansGrid');
+            grid.innerHTML = plans.map(plan => {
+                const isCurrent = plan.id === currentPlanId;
+                const isFeatured = plan.type === 'pro';
+
+                return `
+                    <div class="plan-card ${isFeatured ? 'featured' : ''}">
+                        <span class="plan-type ${plan.type}">${plan.type}</span>
+                        <h3 class="plan-name">${plan.name}</h3>
+                        <div class="plan-price">
+                            <span class="currency">₹</span>
+                            <span class="amount">${plan.price === 0 ? 'Free' : plan.price.toLocaleString()}</span>
+                            ${plan.price > 0 ? '<span class="period">/month</span>' : ''}
+                        </div>
+                        <ul class="plan-features">
+                            ${plan.features.map(f => `<li><i data-lucide="check"></i> ${f}</li>`).join('')}
+                        </ul>
+                        ${isCurrent ?
+                            '<button class="upgrade-btn outline" disabled>Current Plan</button>' :
+                            `<button class="upgrade-btn ${isFeatured ? 'primary' : 'outline'}" onclick="upgradePlan('${plan.id}')">
+                                ${plan.price > currentPlan.price ? 'Upgrade' : 'Switch'} to ${plan.name}
+                            </button>`
+                        }
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function upgradePlan(planId) {
+            alert('Plan upgrade feature coming soon! In the admin panel, you can change your plan.');
+        }
+
+        document.addEventListener('DOMContentLoaded', loadPlans);
+    </script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

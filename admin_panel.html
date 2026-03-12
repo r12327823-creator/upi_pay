@@ -1,0 +1,1437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Upi Click</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Admin Panel Specific Styles */
+        .admin-page {
+            display: flex;
+            min-height: 100vh;
+            background: #f1f5f9;
+        }
+
+        .admin-sidebar {
+            width: 260px;
+            background: #1e293b;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            padding: 1.5rem;
+            z-index: 100;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #334155;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .admin-logo h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .admin-logo span {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            display: block;
+            letter-spacing: 1px;
+        }
+
+        .admin-nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .admin-nav-item:hover {
+            background: #334155;
+            color: white;
+        }
+
+        .admin-nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .admin-nav-item i {
+            width: 20px;
+            height: 20px;
+        }
+
+        .admin-main {
+            margin-left: 260px;
+            flex-grow: 1;
+            padding: 2rem;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .admin-header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .admin-user {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: #e2e8f0;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+        }
+
+        .admin-user-info {
+            text-align: right;
+        }
+
+        .admin-user-info strong {
+            display: block;
+            font-size: 0.9rem;
+            color: #1e293b;
+        }
+
+        .admin-user-info span {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Admin Dashboard Stats */
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .admin-stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+
+        .admin-stat-card.blue::before { background: #3b82f6; }
+        .admin-stat-card.green::before { background: #10b981; }
+        .admin-stat-card.orange::before { background: #f59e0b; }
+        .admin-stat-card.red::before { background: #ef4444; }
+
+        .admin-stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .admin-stat-icon.blue { background: #dbeafe; color: #3b82f6; }
+        .admin-stat-icon.green { background: #d1fae5; color: #10b981; }
+        .admin-stat-icon.orange { background: #fef3c7; color: #f59e0b; }
+        .admin-stat-icon.red { background: #fee2e2; color: #ef4444; }
+
+        .admin-stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-stat-label {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        /* Admin Content Cards */
+        .admin-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .admin-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .admin-card-body {
+            padding: 1.5rem;
+        }
+
+        /* Admin Table */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .admin-table th {
+            background: #f8fafc;
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-table td {
+            padding: 1rem 1.25rem;
+            font-size: 0.9rem;
+            color: #334155;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-table tr:hover {
+            background: #f8fafc;
+        }
+
+        /* Admin Badge */
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .admin-badge.success { background: #d1fae5; color: #059669; }
+        .admin-badge.warning { background: #fef3c7; color: #d97706; }
+        .admin-badge.danger { background: #fee2e2; color: #dc2626; }
+        .admin-badge.info { background: #dbeafe; color: #2563eb; }
+        .admin-badge.primary { background: #dbeafe; color: #2563eb; }
+
+        /* Action Buttons */
+        .admin-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-btn {
+            padding: 0.5rem 0.75rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .admin-btn-view { background: #e0f2fe; color: #0284c7; }
+        .admin-btn-view:hover { background: #bae6fd; }
+
+        .admin-btn-edit { background: #fef3c7; color: #d97706; }
+        .admin-btn-edit:hover { background: #fde68a; }
+
+        .admin-btn-delete { background: #fee2e2; color: #dc2626; }
+        .admin-btn-delete:hover { background: #fecaca; }
+
+        .admin-btn-approve { background: #d1fae5; color: #059669; }
+        .admin-btn-approve:hover { background: #a7f3d0; }
+
+        /* Forms */
+        .admin-form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .admin-form-full {
+            grid-column: 1 / -1;
+        }
+
+        .admin-form-group {
+            margin-bottom: 1rem;
+        }
+
+        .admin-form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-form-group input,
+        .admin-form-group select,
+        .admin-form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: border-color 0.2s;
+        }
+
+        .admin-form-group input:focus,
+        .admin-form-group select:focus,
+        .admin-form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Modal */
+        .admin-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .admin-modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .admin-modal {
+            background: white;
+            border-radius: 16px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .admin-modal-overlay.active .admin-modal {
+            transform: translateY(0);
+        }
+
+        .admin-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .admin-modal-header h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .admin-modal-body {
+            padding: 1.5rem;
+        }
+
+        .admin-modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .empty-state i {
+            width: 64px;
+            height: 64px;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        .empty-state h4 {
+            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+        }
+
+        .empty-state p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        /* Tabs */
+        .admin-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-tab {
+            padding: 1rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .admin-tab:hover {
+            color: #334155;
+        }
+
+        .admin-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        /* Pagination */
+        .admin-pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .admin-pagination-info {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .admin-pagination-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .admin-pagination-btn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .admin-pagination-btn:hover:not(:disabled) {
+            background: #f8fafc;
+        }
+
+        .admin-pagination-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Search and Filters */
+        .admin-filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-search {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .admin-search input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .admin-search i {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            width: 18px;
+            height: 18px;
+        }
+
+        .admin-filter-btn {
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Content Sections */
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        /* Charts */
+        .chart-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .chart-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1e293b;
+        }
+
+        .chart-container {
+            height: 250px;
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .quick-action-card {
+            padding: 1.25rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quick-action-card:hover {
+            border-color: var(--primary);
+            background: #f8fafc;
+        }
+
+        .quick-action-card h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+            color: #1e293b;
+        }
+
+        .quick-action-card p {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .toast {
+            background: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 300px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .toast.success { border-left: 4px solid #10b981; }
+        .toast.error { border-left: 4px solid #ef4444; }
+        .toast.warning { border-left: 4px solid #f59e0b; }
+        .toast.info { border-left: 4px solid #3b82f6; }
+
+        .toast-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .toast.success .toast-icon { color: #10b981; }
+        .toast.error .toast-icon { color: #ef4444; }
+        .toast.warning .toast-icon { color: #f59e0b; }
+        .toast.info .toast-icon { color: #3b82f6; }
+
+        .toast-message {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #334155;
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94a3b8;
+            padding: 0.25rem;
+        }
+    </style>
+</head>
+<body class="admin-page">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <div class="admin-logo">
+            <div class="admin-logo-icon">
+                <i data-lucide="zap" style="color: white;"></i>
+            </div>
+            <div>
+                <h2>Upi Click</h2>
+                <span>ADMIN PANEL</span>
+            </div>
+        </div>
+
+        <nav class="admin-nav-menu">
+            <button class="admin-nav-item active" data-section="dashboard">
+                <i data-lucide="layout-dashboard"></i>
+                Dashboard
+            </button>
+            <button class="admin-nav-item" data-section="merchants">
+                <i data-lucide="users"></i>
+                Merchants
+            </button>
+            <button class="admin-nav-item" data-section="users">
+                <i data-lucide="user-check"></i>
+                Users
+            </button>
+            <button class="admin-nav-item" data-section="plans">
+                <i data-lucide="credit-card"></i>
+                Plans
+            </button>
+            <button class="admin-nav-item" data-section="transactions">
+                <i data-lucide="receipt"></i>
+                Transactions
+            </button>
+            <button class="admin-nav-item" data-section="settings">
+                <i data-lucide="settings"></i>
+                Settings
+            </button>
+            <button class="admin-nav-item" id="adminLogoutBtn" style="margin-top: auto; color: #f87171;">
+                <i data-lucide="log-out"></i>
+                Logout
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1 id="pageTitle">Dashboard</h1>
+            <div class="admin-user">
+                <div class="admin-user-info">
+                    <strong id="adminName">Admin User</strong>
+                    <span>Administrator</span>
+                </div>
+                <div class="admin-avatar">
+                    <i data-lucide="user"></i>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard" class="admin-section active">
+            <!-- Stats -->
+            <div class="admin-stats-grid">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon blue">
+                        <i data-lucide="users"></i>
+                    </div>
+                    <div class="admin-stat-value" id="totalMerchants">0</div>
+                    <div class="admin-stat-label">Total Merchants</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon green">
+                        <i data-lucide="user-check"></i>
+                    </div>
+                    <div class="admin-stat-value" id="totalUsers">0</div>
+                    <div class="admin-stat-label">Total Users</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon orange">
+                        <i data-lucide="trending-up"></i>
+                    </div>
+                    <div class="admin-stat-value" id="totalRevenue">₹0</div>
+                    <div class="admin-stat-label">Total Revenue</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon red">
+                        <i data-lucide="credit-card"></i>
+                    </div>
+                    <div class="admin-stat-value" id="activePlans">0</div>
+                    <div class="admin-stat-label">Active Plans</div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h3>Transaction Overview</h3>
+                    <div class="chart-container">
+                        <canvas id="transactionChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3>Quick Actions</h3>
+                    <div class="quick-actions">
+                        <div class="quick-action-card" onclick="openModal('addMerchantModal')">
+                            <h4><i data-lucide="user-plus" style="width: 16px; height: 16px;"></i> Add Merchant</h4>
+                            <p>Register new merchant</p>
+                        </div>
+                        <div class="quick-action-card" onclick="openModal('addUserModal')">
+                            <h4><i data-lucide="plus-circle" style="width: 16px; height: 16px;"></i> Add User</h4>
+                            <p>Create new user account</p>
+                        </div>
+                        <div class="quick-action-card" onclick="openModal('addPlanModal')">
+                            <h4><i data-lucide="plus-square" style="width: 16px; height: 16px;"></i> Create Plan</h4>
+                            <p>Add new subscription plan</p>
+                        </div>
+                        <div class="quick-action-card" onclick="switchSection('transactions')">
+                            <h4><i data-lucide="file-text" style="width: 16px; height: 16px;"></i> View All</h4>
+                            <p>See all transactions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Recent Transactions</h3>
+                    <button class="btn btn-outline" onclick="switchSection('transactions')">View All</button>
+                </div>
+                <div class="admin-card-body p-0">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Merchant</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentTransactionsTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Merchants Section -->
+        <section id="merchants" class="admin-section">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Merchant Management</h3>
+                    <button class="btn btn-primary" onclick="openModal('addMerchantModal')">
+                        <i data-lucide="plus"></i> Add Merchant
+                    </button>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-filters">
+                        <div class="admin-search">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="merchantSearch" placeholder="Search merchants...">
+                        </div>
+                        <select class="filter-btn" id="merchantStatusFilter" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="pending">Pending</option>
+                            <option value="suspended">Suspended</option>
+                        </select>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Business Name</th>
+                                <th>Owner</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Plan</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="merchantsTable">
+                        </tbody>
+                    </table>
+                    <div class="admin-pagination">
+                        <div class="admin-pagination-info" id="merchantsPaginationInfo">Showing 0 merchants</div>
+                        <div class="admin-pagination-buttons">
+                            <button class="admin-pagination-btn" id="merchantsPrevBtn" disabled>Previous</button>
+                            <button class="admin-pagination-btn" id="merchantsNextBtn" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Users Section -->
+        <section id="users" class="admin-section">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>User Management</h3>
+                    <button class="btn btn-primary" onclick="openModal('addUserModal')">
+                        <i data-lucide="plus"></i> Add User
+                    </button>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-filters">
+                        <div class="admin-search">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="userSearch" placeholder="Search users...">
+                        </div>
+                        <select id="userStatusFilter" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                        </tbody>
+                    </table>
+                    <div class="admin-pagination">
+                        <div class="admin-pagination-info" id="usersPaginationInfo">Showing 0 users</div>
+                        <div class="admin-pagination-buttons">
+                            <button class="admin-pagination-btn" id="usersPrevBtn" disabled>Previous</button>
+                            <button class="admin-pagination-btn" id="usersNextBtn" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plans Section -->
+        <section id="plans" class="admin-section">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Plan Management</h3>
+                    <button class="btn btn-primary" onclick="openModal('addPlanModal')">
+                        <i data-lucide="plus"></i> Create Plan
+                    </button>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-filters">
+                        <div class="admin-search">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="planSearch" placeholder="Search plans...">
+                        </div>
+                        <select id="planTypeFilter" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">All Types</option>
+                            <option value="free">Free</option>
+                            <option value="basic">Basic</option>
+                            <option value="pro">Pro</option>
+                            <option value="enterprise">Enterprise</option>
+                        </select>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Plan Name</th>
+                                <th>Type</th>
+                                <th>Price</th>
+                                <th>Duration</th>
+                                <th>Features</th>
+                                <th>Merchants</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="plansTable">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Transactions Section -->
+        <section id="transactions" class="admin-section">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Transaction Management</h3>
+                    <button class="btn btn-outline" onclick="exportTransactions()">
+                        <i data-lucide="download"></i> Export
+                    </button>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-filters">
+                        <div class="admin-search">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="transactionSearch" placeholder="Search transactions...">
+                        </div>
+                        <select id="transactionStatusFilter" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                            <option value="">All Status</option>
+                            <option value="success">Success</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                        </select>
+                        <input type="date" id="transactionDateFrom" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                        <input type="date" id="transactionDateTo" style="padding: 0.75rem 1rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Transaction ID</th>
+                                <th>Merchant</th>
+                                <th>User</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTable">
+                        </tbody>
+                    </table>
+                    <div class="admin-pagination">
+                        <div class="admin-pagination-info" id="transactionsPaginationInfo">Showing 0 transactions</div>
+                        <div class="admin-pagination-buttons">
+                            <button class="admin-pagination-btn" id="transactionsPrevBtn" disabled>Previous</button>
+                            <button class="admin-pagination-btn" id="transactionsNextBtn" disabled>Next</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="settings" class="admin-section">
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>General Settings</h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Platform Name</label>
+                            <input type="text" id="settingPlatformName" value="Upi Click">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Support Email</label>
+                            <input type="email" id="settingSupportEmail" value="support@upiclick.com">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Currency</label>
+                            <select id="settingCurrency">
+                                <option value="INR">INR (Indian Rupee)</option>
+                                <option value="USD">USD (US Dollar)</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Timezone</label>
+                            <select id="settingTimezone">
+                                <option value="Asia/Kolkata">India (IST)</option>
+                                <option value="UTC">UTC</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-form-full">
+                            <label>Platform Description</label>
+                            <textarea id="settingDescription" rows="3">Upi Click - Simplified UPI Payment Solutions</textarea>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+                </div>
+            </div>
+
+            <div class="admin-card">
+                <div class="admin-card-header">
+                    <h3>Payment Gateway Settings</h3>
+                </div>
+                <div class="admin-card-body">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>UPI ID</label>
+                            <input type="text" id="settingUpiId" value="upiclick@upi">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Merchant ID</label>
+                            <input type="text" id="settingMerchantId" value="MERCHANT123">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>API Key</label>
+                            <input type="password" id="settingApiKey" value="sk_test_xxxxx">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Webhook URL</label>
+                            <input type="url" id="settingWebhookUrl" value="https://upiclick.com/webhook">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" onclick="savePaymentSettings()">Save Payment Settings</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Add Merchant Modal -->
+    <div class="admin-modal-overlay" id="addMerchantModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Add New Merchant</h3>
+                <button class="close-btn" onclick="closeModal('addMerchantModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="addMerchantForm">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Business Name *</label>
+                            <input type="text" id="merchantBusinessName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Owner Name *</label>
+                            <input type="text" id="merchantOwnerName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Email *</label>
+                            <input type="email" id="merchantEmail" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Phone *</label>
+                            <input type="tel" id="merchantPhone" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Plan *</label>
+                            <select id="merchantPlan" required>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="merchantStatus">
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-form-full">
+                            <label>Business Address</label>
+                            <textarea id="merchantAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addMerchantModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveMerchant()">Add Merchant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Merchant Modal -->
+    <div class="admin-modal-overlay" id="editMerchantModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Edit Merchant</h3>
+                <button class="close-btn" onclick="closeModal('editMerchantModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="editMerchantForm">
+                    <input type="hidden" id="editMerchantId">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Business Name *</label>
+                            <input type="text" id="editMerchantBusinessName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Owner Name *</label>
+                            <input type="text" id="editMerchantOwnerName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Email *</label>
+                            <input type="email" id="editMerchantEmail" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Phone *</label>
+                            <input type="tel" id="editMerchantPhone" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Plan *</label>
+                            <select id="editMerchantPlan" required>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="editMerchantStatus">
+                                <option value="active">Active</option>
+                                <option value="pending">Pending</option>
+                                <option value="suspended">Suspended</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-form-full">
+                            <label>Business Address</label>
+                            <textarea id="editMerchantAddress" rows="2"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editMerchantModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="updateMerchant()">Update Merchant</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div class="admin-modal-overlay" id="addUserModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Add New User</h3>
+                <button class="close-btn" onclick="closeModal('addUserModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="addUserForm">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="userFullName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Email *</label>
+                            <input type="email" id="userEmail" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="userPhone">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Role *</label>
+                            <select id="userRole" required>
+                                <option value="user">User</option>
+                                <option value="merchant">Merchant</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="userStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Password *</label>
+                            <input type="password" id="userPassword" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addUserModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveUser()">Add User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div class="admin-modal-overlay" id="editUserModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Edit User</h3>
+                <button class="close-btn" onclick="closeModal('editUserModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Full Name *</label>
+                            <input type="text" id="editUserFullName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Email *</label>
+                            <input type="email" id="editUserEmail" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Phone</label>
+                            <input type="tel" id="editUserPhone">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Role *</label>
+                            <select id="editUserRole" required>
+                                <option value="user">User</option>
+                                <option value="merchant">Merchant</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="editUserStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>New Password (leave blank to keep current)</label>
+                            <input type="password" id="editUserPassword">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editUserModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="updateUser()">Update User</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Plan Modal -->
+    <div class="admin-modal-overlay" id="addPlanModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Create New Plan</h3>
+                <button class="close-btn" onclick="closeModal('addPlanModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="addPlanForm">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Plan Name *</label>
+                            <input type="text" id="planName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Plan Type *</label>
+                            <select id="planType" required>
+                                <option value="free">Free</option>
+                                <option value="basic">Basic</option>
+                                <option value="pro">Pro</option>
+                                <option value="enterprise">Enterprise</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" id="planPrice" required min="0" step="0.01">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Duration (days) *</label>
+                            <input type="number" id="planDuration" required min="1" value="30">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Max Merchants</label>
+                            <input type="number" id="planMaxMerchants" min="1" value="1">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="planStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-form-full">
+                            <label>Features (one per line)</label>
+                            <textarea id="planFeatures" rows="4" placeholder="Unlimited Transactions&#10;Priority Support&#10;Analytics Dashboard"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('addPlanModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="savePlan()">Create Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Plan Modal -->
+    <div class="admin-modal-overlay" id="editPlanModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Edit Plan</h3>
+                <button class="close-btn" onclick="closeModal('editPlanModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <form id="editPlanForm">
+                    <input type="hidden" id="editPlanId">
+                    <div class="admin-form-grid">
+                        <div class="admin-form-group">
+                            <label>Plan Name *</label>
+                            <input type="text" id="editPlanName" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Plan Type *</label>
+                            <select id="editPlanType" required>
+                                <option value="free">Free</option>
+                                <option value="basic">Basic</option>
+                                <option value="pro">Pro</option>
+                                <option value="enterprise">Enterprise</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Price (₹) *</label>
+                            <input type="number" id="editPlanPrice" required min="0" step="0.01">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Duration (days) *</label>
+                            <input type="number" id="editPlanDuration" required min="1">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Max Merchants</label>
+                            <input type="number" id="editPlanMaxMerchants" min="1">
+                        </div>
+                        <div class="admin-form-group">
+                            <label>Status</label>
+                            <select id="editPlanStatus">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="admin-form-group admin-form-full">
+                            <label>Features (one per line)</label>
+                            <textarea id="editPlanFeatures" rows="4"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('editPlanModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="updatePlan()">Update Plan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Transaction Modal -->
+    <div class="admin-modal-overlay" id="viewTransactionModal">
+        <div class="admin-modal">
+            <div class="admin-modal-header">
+                <h3>Transaction Details</h3>
+                <button class="close-btn" onclick="closeModal('viewTransactionModal')"><i data-lucide="x"></i></button>
+            </div>
+            <div class="admin-modal-body">
+                <div id="transactionDetails">
+                </div>
+            </div>
+            <div class="admin-modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('viewTransactionModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="admin_app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

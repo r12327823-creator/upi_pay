@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Merchant Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="login-page">
+    <div class="background-effect">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <div class="login-container glass-panel">
+        <div class="login-header">
+            <div class="logo">
+                <i data-lucide="zap"></i>
+                <span>UPIMerchant</span>
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Access your merchant dashboard</p>
+        </div>
+        
+        <form id="loginForm" class="login-form">
+            <div class="form-group">
+                <label for="username">Email or Mobile</label>
+                <div class="input-wrapper">
+                    <i data-lucide="user"></i>
+                    <input type="text" id="username" placeholder="Enter your email or mobile" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <i data-lucide="lock"></i>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <button type="button" class="toggle-password" id="togglePassword">
+                        <i data-lucide="eye"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-options">
+                <label class="checkbox-container">
+                    <input type="checkbox" id="rememberMe">
+                    <span class="checkmark"></span>
+                    Remember me
+                </label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block">
+                Sign In <i data-lucide="arrow-right"></i>
+            </button>
+        </form>
+        
+        <div class="login-footer">
+            <p>Don't have a merchant account? <a href="#">Apply Now</a></p>
+            <p style="margin-top: 1rem;"><a href="admin_login.html" style="font-size: 0.85rem; color: var(--text-muted);">Admin Login</a></p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

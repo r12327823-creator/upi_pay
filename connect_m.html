@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect-M - Upi Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-page">
+    
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item active"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+        
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header" style="margin-bottom: 3rem;">
+            <h1>Merchant Accounts</h1>
+        </div>
+
+        <div class="empty-state-container">
+            <div class="abstract-graphic">
+                <div class="circle-bg"></div>
+                <div class="card-back"></div>
+                <div class="card-front"></div>
+                <!-- Abstract vertical lines and dots -->
+                <div class="line line-1"></div>
+                <div class="line line-2"></div>
+                <div class="dot dot-1"></div>
+                <div class="dot dot-2"></div>
+                <div class="dot dot-3"></div>
+            </div>
+            
+            <h2>Connect your first merchant account</h2>
+            <button class="btn btn-primary btn-add-merchant" id="openMerchantModalBtn">+ Add Merchant Account</button>
+        </div>
+    </main>
+
+    <!-- Full Multi-Step Modal -->
+    <div class="modal-overlay" id="merchantModal">
+        <div class="modal-content merchant-flow-content">
+            
+            <!-- STEP 0: Terms of Service -->
+            <div id="step-tos" class="flow-step active">
+                <div class="modal-header">
+                    <h3>Terms and Service</h3>
+                    <button class="close-btn closeModalBtn"><i data-lucide="x"></i></button>
+                </div>
+                
+                <div class="tos-list">
+                    <div class="tos-item">
+                        <div class="tos-icon qr"><i data-lucide="qr-code"></i></div>
+                        <p>We act solely as a facilitator to help you generate payment requests with ease.</p>
+                    </div>
+                    <div class="tos-item">
+                        <div class="tos-icon card"><i data-lucide="credit-card"></i></div>
+                        <p>Please note that we are not a payment gateway and do not process or handle any payments directly.</p>
+                    </div>
+                    <div class="tos-item">
+                        <div class="tos-icon store"><i data-lucide="store"></i></div>
+                        <p>All payments made via the generated payment links are settled directly into your own merchant account.</p>
+                    </div>
+                    <div class="tos-item">
+                        <div class="tos-icon search"><i data-lucide="search"></i></div>
+                        <p>We are not liable for any fraudulent transactions or activities associated with your merchant account.</p>
+                    </div>
+                    <div class="tos-item">
+                        <div class="tos-icon warning"><i data-lucide="alert-triangle"></i></div>
+                        <p>Additionally, we are not responsible for any suspension, restriction, or termination of your merchant account by your payment provider.</p>
+                    </div>
+                </div>
+                
+                <label class="custom-checkbox">
+                    <input type="checkbox" id="tosCheckbox">
+                    <span class="checkmark"></span>
+                    I have read and accept to ToS of Upi Pay
+                </label>
+                
+                <button class="btn btn-primary btn-full mt-4" id="btnAgreeTos" disabled style="opacity: 0.5;">Agree and Continue</button>
+            </div>
+
+            <!-- STEP 1: Select Provider -->
+            <div id="step-1" class="flow-step">
+                <div class="modal-header border-none">
+                    <h3>Add Merchant Account</h3>
+                    <button class="close-btn closeModalBtn"><i data-lucide="x"></i></button>
+                </div>
+                <div class="step-indicator">
+                    <div class="ring" data-progress="25">
+                        <svg viewBox="0 0 36 36"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" stroke-dasharray="25, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
+                        <span class="ring-text">1 of 4</span>
+                    </div>
+                    <div class="step-info">
+                        <h4>Step 1</h4>
+                        <p>Select the provider that will process your payments.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4 mb-2">
+                    <label class="text-muted">Payment providers</label>
+                </div>
+                
+                <div class="radio-group">
+                    <label class="custom-radio">
+                        <input type="radio" name="provider" value="paytm" checked>
+                        <span class="radio-mark"></span>
+                        Paytm for Business
+                    </label>
+                    <label class="custom-radio">
+                        <input type="radio" name="provider" value="razorpay">
+                        <span class="radio-mark"></span>
+                        Razorpay
+                    </label>
+                </div>
+
+                <div class="flex-right mt-4 mb-4">
+                    <button class="btn btn-primary" id="btnNext1">Continue</button>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header text-muted"> <span style="font-size: 0.85rem;">More options coming soon, new providers are on the way</span> <i data-lucide="chevron-down"></i></div>
+                </div>
+            </div>
+
+            <!-- STEP 2: Mobile App Guide -->
+            <div id="step-2" class="flow-step">
+                <div class="modal-header border-none">
+                    <h3>Add Merchant Account</h3>
+                    <button class="close-btn closeModalBtn"><i data-lucide="x"></i></button>
+                </div>
+                <div class="step-indicator">
+                    <div class="ring" data-progress="50">
+                        <svg viewBox="0 0 36 36"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" stroke-dasharray="50, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
+                        <span class="ring-text">2 of 4</span>
+                    </div>
+                    <div class="step-info">
+                        <h4>Step 2</h4>
+                        <p>Below is a step-by-step guide with screenshots — follow it to create a staff account in the Paytm dashboard.</p>
+                    </div>
+                </div>
+
+                <p style="font-size: 0.9rem; margin-top: 1rem; margin-bottom: 1.5rem;">Download Paytm for Business App on playstore. Login or Create an account in Paytm for Business App.</p>
+
+                <div class="carousel-container">
+                    <button class="carousel-btn prev-btn"><i data-lucide="chevron-left"></i></button>
+                    <!-- Mocking the phone wireframe and app UI -->
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div class="mock-header">Paytm Business</div>
+                            <div class="mock-body">Growth partner for your business</div>
+                            <button class="mock-btn-blue">Login or Become a Merchant</button>
+                        </div>
+                    </div>
+                    <button class="carousel-btn next-btn"><i data-lucide="chevron-right"></i></button>
+                </div>
+                
+                <div class="carousel-dots">
+                    <span class="dot active"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                </div>
+                <div style="text-align:center; font-size: 0.8rem; color: #666; margin-bottom: 1rem;">1 of 12</div>
+
+                <div class="split-footer">
+                    <button class="btn btn-outline" id="btnBack2">Back</button>
+                    <button class="btn btn-primary" id="btnNext2">Continue</button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Credentials -->
+            <div id="step-3" class="flow-step">
+                <div class="modal-header border-none">
+                    <h3>Add Merchant Account</h3>
+                    <button class="close-btn closeModalBtn"><i data-lucide="x"></i></button>
+                </div>
+                <div class="step-indicator">
+                    <div class="ring" data-progress="75">
+                        <svg viewBox="0 0 36 36"><path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /><path class="circle" stroke-dasharray="75, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" /></svg>
+                        <span class="ring-text">3 of 4</span>
+                    </div>
+                    <div class="step-info">
+                        <h4>Step 3</h4>
+                        <p>Enter the staff account credentials you created in the previous step.</p>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <label style="display:block; margin-bottom:0.5rem; font-size: 0.9rem;">Staff Mobile No.</label>
+                    <input type="text" class="input-full" placeholder="Enter staff mobile number">
+                    
+                    <label style="display:block; margin-bottom:0.5rem; font-size: 0.9rem;">Display Name</label>
+                    <input type="text" class="input-full" style="margin-bottom: 0.5rem;" placeholder="Enter display name">
+                    <small style="color: var(--text-muted); display: block; margin-bottom: 2rem;">Think of a descriptive name for this account - it will help you easily recognize it in the list.</small>
+                </div>
+
+                <div class="split-footer" style="justify-content: center; gap: 1rem;">
+                    <button class="btn btn-outline" id="btnBack3">Back</button>
+                    <button class="btn btn-primary" onclick="alert('Account Added successfully!')">Continue</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

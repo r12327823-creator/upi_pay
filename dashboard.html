@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Upi Click</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="dashboard-page">
+    
+    <div class="sidebar">
+        <div class="logo">
+            <!-- Simulated Logo text since we don't have the image file -->
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item active"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+        
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>Today</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="openPaymentModalBtn"><i data-lucide="plus"></i> Create Payment Link</button>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-value">₹0</div>
+                    <div class="stat-label">Receive Amount</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-value">0</div>
+                    <div class="stat-label">Success transaction</div>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-content">
+                    <div class="stat-value">4</div>
+                    <div class="stat-label">Payment requests</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-section">
+            <div class="chart-header">
+                <h2>Statistics for</h2>
+                <div class="date-picker">
+                    12 Mar, 12:00 AM - 12 Mar, 11:59 PM <i data-lucide="chevron-down"></i>
+                </div>
+            </div>
+            <div class="chart-container">
+                <canvas id="mainChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <!-- Create Payment Link Modal -->
+    <div class="modal-overlay" id="paymentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create Payment Link</h3>
+                <button class="close-btn" id="closeModalBtn"><i data-lucide="x"></i></button>
+            </div>
+            <form id="paymentForm">
+                <label>Amount (₹)</label>
+                <input type="number" id="txAmount" class="input-full" placeholder="Enter amount" required min="1">
+                
+                <label>Description (Optional)</label>
+                <input type="text" id="txDesc" class="input-full" placeholder="e.g. Order #123">
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Link</button>
+            </form>
+            <div id="paymentResult" style="display:none; margin-top: 1rem;">
+                <label>Payment Link Generated:</label>
+                <div class="input-with-copy" style="margin-top: 0.5rem;">
+                    <input type="text" id="generatedLink" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('generatedLink')"><i data-lucide="copy"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

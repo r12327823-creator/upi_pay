@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPI Requests - Upi Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-page">
+    
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item active"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+        
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header" style="margin-bottom: 2rem;">
+            <h1>UPI Requests</h1>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label>Duration</label>
+                    <div class="select-wrapper">
+                        <select class="input-full">
+                            <option>12 Mar, 12:00 AM - 12 Mar, 11:59 PM</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Request Status</label>
+                    <div class="select-wrapper">
+                        <select class="input-full">
+                            <option>All</option>
+                            <option>SUCCESS</option>
+                            <option>EXPIRED</option>
+                            <option>PENDING</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Payee Address</label>
+                    <div class="select-wrapper">
+                        <select class="input-full">
+                            <option>All</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Request ID</label>
+                    <input type="text" class="input-full">
+                </div>
+                <div class="filter-group">
+                    <label>Transaction ID</label>
+                    <input type="text" class="input-full">
+                </div>
+                <div class="filter-group">
+                    <label>Customer ID</label>
+                    <input type="text" class="input-full">
+                </div>
+            </div>
+            <div class="filter-actions mt-4">
+                <button class="btn btn-primary" style="min-width: 100px;">Search</button>
+                <button class="btn btn-secondary" style="min-width: 100px;">Clear</button>
+            </div>
+        </div>
+
+        <!-- Table Header Actions -->
+        <div class="table-actions-row">
+            <button class="btn btn-text text-primary"><i data-lucide="download"></i> Download</button>
+        </div>
+
+        <!-- Data Table -->
+        <div class="content-box p-0 overflow-x-auto">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Request Time</th>
+                        <th>Request ID</th>
+                        <th>Customer ID</th>
+                        <th>Payee Address</th>
+                        <th>Transaction ID</th>
+                        <th>Payment Time</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>12 Mar 2026, 02:55 PM</td>
+                        <td class="mono-text">7e1e437b-5839-4745-<br>8881-221eef38290d</td>
+                        <td class="text-muted">upiclick-test</td>
+                        <td class="text-muted">paytmqr5flp8v@pty<br>s</td>
+                        <td class="text-muted">873956092499</td>
+                        <td class="text-muted">12 Mar 2026, 02:56 PM</td>
+                        <td class="font-medium text-main">₹500.00</td>
+                        <td><span class="status-badge success">SUCCESS</span></td>
+                    </tr>
+                    <tr>
+                        <td>12 Mar 2026, 02:22 PM</td>
+                        <td class="mono-text">009cb322-83c6-<br>4d6e-9dd4-<br>5ed8f34dcfa1</td>
+                        <td class="text-muted">upiclick-test</td>
+                        <td class="text-muted">paytmqr5flp8v@pty<br>s</td>
+                        <td class="text-muted">-</td>
+                        <td class="text-muted">-</td>
+                        <td class="font-medium text-main">₹1,250.00</td>
+                        <td><span class="status-badge expired">EXPIRED</span></td>
+                    </tr>
+                    <tr>
+                        <td>12 Mar 2026, 02:22 PM</td>
+                        <td class="mono-text">487a3ce9-a651-4cc6-<br>8838-39056eca4a1b</td>
+                        <td class="text-muted">upiclick-test</td>
+                        <td class="text-muted">paytmqr5flp8v@pty<br>s</td>
+                        <td class="text-muted">-</td>
+                        <td class="text-muted">-</td>
+                        <td class="font-medium text-main">₹75.00</td>
+                        <td><span class="status-badge expired">EXPIRED</span></td>
+                    </tr>
+                    <tr>
+                        <td>12 Mar 2026, 02:08 PM</td>
+                        <td class="mono-text">fd99b7f8-d81d-4d0f-<br>b4f2-becb10a0ace9</td>
+                        <td class="text-muted">upiclick-test</td>
+                        <td class="text-muted">paytmqr5flp8v@pty<br>s</td>
+                        <td class="text-muted">-</td>
+                        <td class="text-muted">-</td>
+                        <td class="font-medium text-main">₹2,000.00</td>
+                        <td><span class="status-badge expired">EXPIRED</span></td>
+                    </tr>
+                    <tr>
+                        <td>12 Mar 2026, 02:05 PM</td>
+                        <td class="mono-text">5ba73679-feec-47c8-<br>ae25-4c405732358f</td>
+                        <td class="text-muted">upiclick-test</td>
+                        <td class="text-muted">paytmqr5flp8v@pty<br>s</td>
+                        <td class="text-muted">-</td>
+                        <td class="text-muted">-</td>
+                        <td class="font-medium text-main">₹150.00</td>
+                        <td><span class="status-badge expired">EXPIRED</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <span class="text-muted" style="font-size: 0.85rem;">Rows per page</span>
+            <div class="select-wrapper select-sm" style="margin: 0 1rem;">
+                <select class="input-full" style="margin-bottom:0; padding: 0.3rem 1.5rem 0.3rem 0.5rem;">
+                    <option>5/page</option>
+                    <option>10/page</option>
+                    <option>20/page</option>
+                </select>
+            </div>
+            <span class="text-muted" style="font-size: 0.85rem; margin-right: 1rem;">1 - 5 of 5</span>
+            <button class="btn btn-icon disabled"><i data-lucide="chevron-left"></i></button>
+            <button class="btn btn-icon disabled"><i data-lucide="chevron-right"></i></button>
+        </div>
+
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

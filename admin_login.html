@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Upi Click</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .admin-login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 20px;
+        }
+        .admin-login-container {
+            background: white;
+            border-radius: 16px;
+            padding: 3rem;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        .admin-logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .admin-logo h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a1a2e;
+        }
+        .admin-logo span {
+            color: var(--primary);
+        }
+        .admin-logo p {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .login-error {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .login-error.show {
+            display: block;
+        }
+    </style>
+</head>
+<body class="admin-login-page">
+    <div class="admin-login-container">
+        <div class="admin-logo">
+            <h1>U<span>pi</span> Click</h1>
+            <p>Admin Panel Login</p>
+        </div>
+
+        <div class="login-error" id="loginError">Invalid credentials. Please try again.</div>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label for="adminEmail">Email Address</label>
+                <input type="email" id="adminEmail" class="input-full" placeholder="admin@upiclick.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="adminPassword">Password</label>
+                <input type="password" id="adminPassword" class="input-full" placeholder="Enter your password" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="padding: 1rem; font-size: 1rem;">
+                Sign In to Admin Panel
+            </button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="index.html" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">
+                Back to Merchant Login
+            </a>
+        </div>
+    </div>
+
+    <script src="admin_app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

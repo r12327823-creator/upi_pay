@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Upi Pay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-page">
+
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item active"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>For Developers</h1>
+        </div>
+
+        <div class="tabs">
+            <a href="developer.html" class="tab" style="text-decoration:none;">API Keys</a>
+            <a href="payment_options.html" class="tab" style="text-decoration:none;">Payment Options</a>
+            <a href="api_docs.html" class="tab active" style="text-decoration:none;">API Documentation</a>
+        </div>
+
+        <div class="content-box" style="max-width: 900px;">
+            <div class="doc-section">
+                <h2>1. Authentication</h2>
+                <p>All API requests to Upipay require custom headers to authenticate the merchant account. You must pass your **Key ID** (`x-key-id`) and an HMAC-SHA256 **Signature** (`x-signature`).</p>
+
+                <h3>Generating the Signature</h3>
+                <ol style="margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Sort:</strong> Arrange all keys in your JSON request alphabetically.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Filter:</strong> Remove any keys containing empty strings, null values, or empty arrays/objects.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Concatenate:</strong> Join values with the <code>|</code> character.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Hash:</strong> Compute the <code>HMAC-SHA256</code> hash using your **Key Secret**.</li>
+                </ol>
+
+<pre>
+// Example in Node.js
+const crypto = require('crypto');
+
+function generateSignature(payload, secret) {
+    // 1. Sort and filter
+    const sortedKeys = Object.keys(payload).sort();
+    const values = [];
+
+    sortedKeys.forEach(key => {
+        if (payload[key] !== null && payload[key] !== '') {
+            values.push(payload[key]);
+        }
+    });
+
+    // 2. Concatenate
+    const strToSign = values.join('|');
+
+    // 3. Hash
+    return crypto.createHmac('sha256', secret)
+                 .update(strToSign)
+                 .digest('hex');
+}
+</pre>
+            </div>
+
+            <div class="doc-section">
+                <h2>2. Create a Payment Request</h2>
+                <p>Use this endpoint to generate a unique checkout link for your customer. The link defaults to a 15-minute lifespan.</p>
+
+                <div class="endpoint-badge">POST https://api.upeeqst.com/api/v1/payment/requests</div>
+
+                <h3>Request Payload Example</h3>
+<pre>
+{
+    "amount": 500.00,
+    "currency": "INR",
+    "order_id": "ORD-987654",
+    "customer_email": "user@example.com",
+    "customer_phone": "9876543210"
+}
+</pre>
+
+                <h3>Success Response Example (200 OK)</h3>
+<pre>
+{
+    "status": "success",
+    "data": {
+        "service_request_id": "req_a1b2c3d4e5f6",
+        "payment_link": "https://pay.upipay.com/req_a1b2c3d4e5f6",
+        "expires_in": 900
+    }
+}
+</pre>
+            </div>
+
+            <div class="doc-section">
+                <h2>3. Webhooks</h2>
+                <p>Register your Webhook URL in your Connect-M settings to listen for status changes. When a customer pays, Upipay will send a <code>POST</code> request containing the <code>service_request_id</code> and the new status (e.g., <code>PAID</code>).</p>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

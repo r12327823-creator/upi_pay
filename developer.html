@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Developers - Upi Click</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="dashboard-page">
+    
+    <div class="sidebar">
+        <div class="logo">
+            <div class="logo-text">U<span class="dot">p</span>i<br><span style="font-size: 0.8rem; font-weight: 400; letter-spacing: 2px;">P A Y</span></div>
+        </div>
+        
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><i data-lucide="home"></i> Dashboard</a>
+            <a href="connect_m.html" class="nav-item"><i data-lucide="link"></i> Connect-M</a>
+            <a href="subscription.html" class="nav-item"><i data-lucide="refresh-cw"></i> Subscription</a>
+            <a href="upi_requests.html" class="nav-item"><i data-lucide="book-open"></i> UPI Requests</a>
+            <a href="developer.html" class="nav-item active"><i data-lucide="code"></i> For Developers</a>
+        </nav>
+        
+        <a href="index.html" class="nav-item logout"><i data-lucide="log-out"></i> Log out</a>
+        <a href="admin_login.html" class="nav-item" style="margin-top: 0.5rem;"><i data-lucide="shield"></i> Admin Panel</a>
+    </div>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1>For Developers</h1>
+        </div>
+
+        <div class="tabs">
+            <a href="developer.html" class="tab active" style="text-decoration:none;">API Keys</a>
+            <a href="payment_options.html" class="tab" style="text-decoration:none;">Payment Options</a>
+            <a href="api_docs.html" class="tab" style="text-decoration:none;">API Documentation</a>
+        </div>
+
+        <div class="content-box">
+            <div class="form-group">
+                <label>Key ID</label>
+                <div class="input-with-copy">
+                    <input type="text" id="keyId" value="2V0ibiRCESZam0MrKV2DNeBGG3GRYHzi" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('keyId')"><i data-lucide="copy"></i></button>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>Key secret</label>
+                <div class="input-group">
+                    <div class="input-with-copy">
+                        <input type="text" id="keySecret" value="Elq7C2qxvnxHfXGBmxg7G9-i3hAhsYIVhvoGJXPE7" readonly>
+                        <button class="copy-btn" onclick="copyToClipboard('keySecret')"><i data-lucide="copy"></i></button>
+                    </div>
+                    <button class="btn btn-primary" onclick="alert('Regenerating key...')">Regenerate key</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
